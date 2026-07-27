@@ -1,0 +1,17 @@
+{
+  "name": "sindikat-studio83-production",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node tests/validate.mjs",
+    "check": "npm run build && npm run test && npm run audit",
+    "dev": "python3 -m http.server 4173 -d dist",
+    "sync:blog": "node scripts/sync-blog.mjs",
+    "audit": "python3 tests/dom_audit.py"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

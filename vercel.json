@@ -1,0 +1,463 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/sr-me/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/pocetna/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/Pocetna.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/onama/",
+      "destination": "/o-nama/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/onama/cn.html",
+      "destination": "/o-nama/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/kontakt/",
+      "destination": "/kontakt/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/poslovi/",
+      "destination": "/postani-dio-tima/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/",
+      "destination": "/usluge/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/oglasavanje.html",
+      "destination": "/usluge/performance-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/oglasavanje/",
+      "destination": "/usluge/performance-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/analitika/",
+      "destination": "/usluge/performance-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/landingpage.html",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/landingpage/",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/ux.html",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/ux/",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/seo.html",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/seo/",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/copywriting.html",
+      "destination": "/usluge/sadrzaj-za-kampanje/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/copywriting/",
+      "destination": "/usluge/sadrzaj-za-kampanje/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/game.html",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/game/",
+      "destination": "/usluge/web-i-konverzije/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/usluge/gamification/",
+      "destination": "/usluge/aktivacije-i-eventi/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p01/",
+      "destination": "/blog/p01/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p01/index.html",
+      "destination": "/blog/p01/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p02/",
+      "destination": "/blog/p02/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p02/index.html",
+      "destination": "/blog/p02/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p03/",
+      "destination": "/blog/p03/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p03/index.html",
+      "destination": "/blog/p03/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p04/",
+      "destination": "/blog/p04/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p04/index.html",
+      "destination": "/blog/p04/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p05/",
+      "destination": "/blog/p05/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p05/index.html",
+      "destination": "/blog/p05/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p06/",
+      "destination": "/blog/p06/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p06/index.html",
+      "destination": "/blog/p06/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p07/",
+      "destination": "/blog/p07/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p07/index.html",
+      "destination": "/blog/p07/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p08/",
+      "destination": "/blog/p08/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p08/index.html",
+      "destination": "/blog/p08/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p09/",
+      "destination": "/blog/p09/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p09/index.html",
+      "destination": "/blog/p09/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p10/",
+      "destination": "/blog/p10/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p10/index.html",
+      "destination": "/blog/p10/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p11/",
+      "destination": "/blog/p11/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p11/index.html",
+      "destination": "/blog/p11/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p12/",
+      "destination": "/blog/p12/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p12/index.html",
+      "destination": "/blog/p12/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p13/",
+      "destination": "/blog/p13/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p13/index.html",
+      "destination": "/blog/p13/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p14/",
+      "destination": "/blog/p14/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p14/index.html",
+      "destination": "/blog/p14/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p15/",
+      "destination": "/blog/p15/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p15/index.html",
+      "destination": "/blog/p15/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p16/",
+      "destination": "/blog/p16/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p16/index.html",
+      "destination": "/blog/p16/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p17/",
+      "destination": "/blog/p17/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p17/index.html",
+      "destination": "/blog/p17/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p18/",
+      "destination": "/blog/p18/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p18/index.html",
+      "destination": "/blog/p18/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p19/",
+      "destination": "/blog/p19/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p19/index.html",
+      "destination": "/blog/p19/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p20/",
+      "destination": "/blog/p20/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p20/index.html",
+      "destination": "/blog/p20/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p21/",
+      "destination": "/blog/p21/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p21/index.html",
+      "destination": "/blog/p21/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p22/",
+      "destination": "/blog/p22/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p22/index.html",
+      "destination": "/blog/p22/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p23/",
+      "destination": "/blog/p23/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p23/index.html",
+      "destination": "/blog/p23/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p24/",
+      "destination": "/blog/p24/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p24/index.html",
+      "destination": "/blog/p24/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p25/",
+      "destination": "/blog/p25/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p25/index.html",
+      "destination": "/blog/p25/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p26/",
+      "destination": "/blog/p26/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p26/index.html",
+      "destination": "/blog/p26/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p27/",
+      "destination": "/blog/p27/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p27/index.html",
+      "destination": "/blog/p27/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p28/",
+      "destination": "/blog/p28/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p28/index.html",
+      "destination": "/blog/p28/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p29/",
+      "destination": "/blog/p29/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p29/index.html",
+      "destination": "/blog/p29/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p30/",
+      "destination": "/blog/p30/",
+      "permanent": true
+    },
+    {
+      "source": "/sr-me/blog/p30/index.html",
+      "destination": "/blog/p30/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
