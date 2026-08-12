@@ -25,9 +25,8 @@ export const site = {
 
 export const navigation = [
   { label: 'Usluge', href: '/usluge/' },
-  { label: 'Aktivacije', href: '/usluge/aktivacije-i-eventi/' },
   { label: 'Radovi', href: '/radovi/' },
-  { label: 'Industrije', href: '/industrije/' },
+  { label: 'Kako radimo', href: '/#saradnja' },
   { label: 'O nama', href: '/o-nama/' },
-  { label: 'Resursi', href: '/blog/' }
+  { label: 'Kontakt', href: '/kontakt/' }
 ];
