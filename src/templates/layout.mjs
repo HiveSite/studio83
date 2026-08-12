@@ -29,6 +29,7 @@ export function layout({
   <link rel="canonical" href="${canonical}">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/sales-ux.css">
   <meta property="og:type" content="${type}">
   <meta property="og:site_name" content="${site.name}">
   <meta property="og:locale" content="sr_ME">
@@ -69,6 +70,7 @@ export function layout({
   ${footer()}
   <script>window.SINDIKAT_CONFIG=${JSON.stringify(site.integrations)};</script>
   <script src="/assets/app.js" defer></script>
+  <script src="/assets/sales-ux.js" defer></script>
 </body>
 </html>`;
 }
