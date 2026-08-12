@@ -16,7 +16,7 @@ export function header(activePath = '/') {
       </a>
       <nav class="desktop-nav" aria-label="Glavna navigacija">${links}</nav>
       <div class="nav-actions">
-        <a class="button button-primary button-small" href="/kontakt/" data-track="header_lead">Zatraži plan</a>
+        <a class="button button-primary button-small" href="/kontakt/" data-track="header_lead">Pošalji brief</a>
         <button class="menu-toggle" type="button" aria-label="Otvori meni" aria-expanded="false" data-menu-toggle>
           <span></span><span></span><span></span>
         </button>
@@ -24,7 +24,7 @@ export function header(activePath = '/') {
     </div>
     <div class="mobile-panel" data-mobile-menu>
       <nav aria-label="Mobilna navigacija">${links}<a href="/postani-dio-tima/">Postani dio tima</a></nav>
-      <a class="button button-primary" href="/kontakt/">Zatraži plan i procjenu</a>
+      <a class="button button-primary" href="/kontakt/">Pošalji brief</a>
     </div>
   </header>`;
 }
@@ -35,7 +35,7 @@ export function footer() {
     <div class="container footer-grid">
       <div class="footer-brand">
         <img src="/images/brand/logo.png" width="180" height="180" alt="Sindikat Studio 83">
-        <p>Kampanje, sadržaj, ljudi i teren povezani kroz isti cilj.</p>
+        <p>Digital, kampanje, ljudi i realizacija povezani kroz jednu odgovornu tačku.</p>
         <div class="footer-socials">
           <a href="${site.instagram}" target="_blank" rel="noopener noreferrer" data-track="instagram_click">Instagram</a>
           <a href="mailto:${site.email}" data-track="email_click">Email</a>
@@ -43,16 +43,16 @@ export function footer() {
       </div>
       <div>
         <h2>Usluge</h2>
-        <a href="/usluge/performance-marketing/">Performance marketing</a>
+        <a href="/usluge/performance-marketing/">Kampanje i rast</a>
+        <a href="/usluge/web-i-konverzije/">Web i digitalni proizvodi</a>
         <a href="/usluge/aktivacije-i-eventi/">Aktivacije i eventi</a>
-        <a href="/usluge/web-i-konverzije/">Web i konverzije</a>
-        <a href="/usluge/recruitment-kampanje/">Recruitment kampanje</a>
+        <a href="/usluge/recruitment-kampanje/">Timovi i angažmani</a>
       </div>
       <div>
         <h2>Studio</h2>
         <a href="/radovi/">Radovi</a>
-        <a href="/industrije/">Industrije</a>
         <a href="/o-nama/">O nama</a>
+        <a href="/industrije/">Industrije</a>
         <a href="/blog/">Resursi</a>
         <a href="/postani-dio-tima/">Postani dio tima</a>
       </div>
@@ -60,7 +60,7 @@ export function footer() {
         <h2>Kontakt</h2>
         <p>${site.location}</p>
         <a href="mailto:${site.email}">${site.email}</a>
-        <a href="/kontakt/">Pošalji upit</a>
+        <a href="/kontakt/">Pošalji brief</a>
       </div>
     </div>
     <div class="container footer-bottom">
@@ -68,9 +68,9 @@ export function footer() {
       <div><a href="/privatnost/">Privatnost</a><a href="/kolacici/">Kolačići</a><a href="/uslovi-koriscenja/">Uslovi</a></div>
     </div>
   </footer>
-  <div class="mobile-cta"><a class="button button-primary" href="/kontakt/" data-track="mobile_sticky_lead">Zatraži plan</a></div>
+  <div class="mobile-cta"><a class="button button-primary" href="/kontakt/" data-track="mobile_sticky_lead">Pošalji brief</a></div>
   <div class="cookie-banner" data-cookie-banner hidden>
-    <div><strong>Kolačići i analitika</strong><p>Koristimo analitiku da razumijemo kako sajt radi. Izbor možeš kasnije promijeniti.</p></div>
+    <div><strong>Kolačići i analitika</strong><p>Koristimo analitiku da razumijemo kako sajt radi. Izbor možete kasnije promijeniti.</p></div>
     <div class="cookie-actions"><button class="button button-ghost button-small" type="button" data-cookie-reject>Odbij</button><button class="button button-primary button-small" type="button" data-cookie-accept>Prihvati</button></div>
   </div>`;
 }
@@ -89,7 +89,7 @@ export function sectionHeading({ eyebrow, title, text = '', align = '' }) {
   </div>`;
 }
 
-export function finalCta({ title = 'Imaš cilj. Hajde da složimo sistem koji ga podržava.', text = 'Pošalji okvir, rok i budžet. Dobićeš konkretan sljedeći korak, ne generičku prezentaciju.', label = 'Zatraži plan i procjenu' } = {}) {
+export function finalCta({ title = 'Imate cilj. Hajde da složimo sistem koji ga podržava.', text = 'Pošaljite cilj, rok i okvirni budžet. Dobićete konkretan sljedeći korak, ne generičku prezentaciju.', label = 'Pošalji brief' } = {}) {
   return `<section class="final-cta section"><div class="container final-cta-panel">
     <span class="eyebrow">Sljedeći korak</span>
     <h2>${title}</h2>
@@ -130,13 +130,13 @@ export function contactForm({ compact = false, source = 'contact-page' } = {}) {
     <div class="form-grid">
       <label><span>Ime i firma *</span><input name="name" autocomplete="name" required placeholder="Marko / Naziv firme"></label>
       <label><span>Email ili telefon *</span><input name="contact" autocomplete="email" required placeholder="marko@email.com / +382..."></label>
-      <label><span>Šta želiš da postigneš? *</span><select name="goal" required><option value="">Izaberi cilj</option><option>Više upita ili prodaje</option><option>Aktivacija ili događaj</option><option>Novi sajt ili landing</option><option>Recruitment i kandidati</option><option>Sezonska kampanja</option><option>Drugo</option></select></label>
-      <label><span>Okvirni budžet</span><select name="budget"><option value="">Još nije definisan</option><option>do 500 €</option><option>500-1.500 €</option><option>1.500-5.000 €</option><option>5.000 €+</option></select></label>
-      <label><span>Kada želiš da kreneš?</span><select name="deadline"><option value="">Izaberi okvir</option><option>Što prije</option><option>U narednih 30 dana</option><option>Za 1-3 mjeseca</option><option>Kasnije / planiranje</option></select></label>
-      <label class="form-span"><span>Kratak opis projekta</span><textarea name="message" rows="5" placeholder="Napiši šta već postoji, rok, lokaciju i najvažniji problem."></textarea></label>
+      <label><span>Šta želite da postignete? *</span><select name="goal" required><option value="">Izaberite najbliži cilj</option><option>Kampanje i rast</option><option>Web i digitalni proizvod</option><option>Aktivacija ili događaj</option><option>Timovi i angažmani</option><option>Kompleksan projekat / više oblasti</option><option>Nijesam siguran</option></select></label>
+      <label><span>Okvirni budžet</span><select name="budget"><option value="">Još nije definisan</option><option>do 500 €</option><option>500 - 1.500 €</option><option>1.500 - 5.000 €</option><option>5.000 €+</option></select></label>
+      <label><span>Kada želite da krenete?</span><select name="deadline"><option value="">Izaberite okvir</option><option>Što prije</option><option>U narednih 30 dana</option><option>Za 1-3 mjeseca</option><option>Kasnije / planiranje</option></select></label>
+      <label class="form-span"><span>Kratak opis projekta</span><textarea name="message" rows="5" placeholder="Šta već postoji, rok, lokacija i najvažniji problem."></textarea></label>
       <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
     </div>
-    <div class="form-submit"><button class="button button-primary" type="submit">Pošalji upit</button><p>Slanjem forme prihvataš <a href="/privatnost/">pravila privatnosti</a>.</p></div>
+    <div class="form-submit"><button class="button button-primary" type="submit">Pošalji brief</button><p>Slanjem forme prihvatate <a href="/privatnost/">pravila privatnosti</a>.</p></div>
     <div class="form-status" role="status" aria-live="polite" data-form-status></div>
   </form>`;
 }
