@@ -72,8 +72,8 @@ function dynamicLabel(value){
   }
   return null;
 }
-const unchangedEnglish=/^(?:Performance|Studio|Breadcrumb|Podgorica|UGC|checklist|event marketing|remarketing|case study|Meta Ads|funnel|Google Ads|CTA|CPC|CPL|SEO|Local SEO|Google Maps|Google Business|Performance marketing|Web \\+ CRO|Creative system|Recruitment growth|Recruitment sprint|Creative plan|Website|Instagram Comment Picker|SINDIKAT STUDIO 83|Instagram tool|Random comment picker|Paste post\\. Load comments\\. Pick a winner\\.|Load comments|RANDOM DRAW|READY|Start draw|Admin \\/ preview|Test mode|Comments|©|↗|×)$/i;
-const specialBrand=/^(?:[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}|@sindikat_studio83|https?:\\/\\/\\S+|marko@email\\.com \\/ \\+382\\.\\.\\.)$/i;
+const unchangedEnglish = new Set(['Performance','Studio','Breadcrumb','Podgorica','UGC','checklist','event marketing','remarketing','case study','Meta Ads','funnel','Google Ads','CTA','CPC','CPL','SEO','Local SEO','Google Maps','Google Business','Performance marketing','Web + CRO','Creative system','Recruitment growth','Recruitment sprint','Creative plan','Website','Instagram Comment Picker','SINDIKAT STUDIO 83','Instagram tool','Random comment picker','Paste post. Load comments. Pick a winner.','Load comments','RANDOM DRAW','READY','Start draw','Admin / preview','Test mode','Comments','©','↗','×']);
+const specialBrand = /^(?:[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}|@sindikat_studio83|https?:\\/\\/\\S+|marko@email\\.com \\/ \\+382\\.\\.\\.)$/i;
 function translateText(raw,route) {
   const trim=raw.trim();
   if(!trim||trim==='__SINDIKAT_EN_ARTICLE_SLOT__')return raw;
@@ -90,7 +90,7 @@ function translateText(raw,route) {
   }
   let translated=translations.get(decoded)??translations.get(trim)??dynamicLabel(decoded);
   if(!translated){
-    if(unchangedEnglish.test(decoded) || specialBrand.test(decoded) || /^[\d\s€+%.,:!?#/\-]+$/.test(decoded) || /^\$\{/.test(decoded) ||
+    if(unchangedEnglish.has(decoded) || specialBrand.test(decoded) || /^[\d\s€+%.,:!?#/\-]+$/.test(decoded) || /^\$\{/.test(decoded) ||
       /^(Sindikat Studio 83|ImaPosla.me|Instagram|Email|Meta|Google|GA4|GTM|Web|FAQ)$/.test(decoded))return raw;
     missing.set(decoded,(missing.get(decoded)||new Set()).add(route));
     return raw;
