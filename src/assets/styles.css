@@ -329,3 +329,7 @@ details>div p{margin:0}
 .hero-core{padding:clamp(12px,2.1vw,28px)}
 .hero-core strong{min-width:0;max-width:100%;font-size:clamp(20px,3vw,43px);line-height:.94;overflow-wrap:normal}
 @media(max-width:760px){.hero-node-1{right:1%}}
+
+/* Keep the rotated FAQ toggle inside the viewport, including long translations. */
+.faq-list summary{padding-right:14px;gap:16px}
+.faq-list summary span{flex:0 0 auto;transform-origin:center center}
