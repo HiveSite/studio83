@@ -128,6 +128,18 @@ for(const width of deviceWidths){
         await page.keyboard.press('Escape');
         if(await menu.getAttribute('aria-expanded')!=='false')issues.push({route,width,kind:'mobile menu does not close'});
       }
+      const chooser=page.locator('[data-sales-chooser]');
+      if(await chooser.count()){
+        await chooser.locator('[data-step="goal"] [data-value="growth"]').click();
+        await chooser.locator('[data-step="mode"] [data-value="one"]').click();
+        await chooser.locator('[data-step="budget"] [data-value="under500"]').click();
+        const recommendation=(await chooser.locator('[data-sales-result]').innerText()).trim();
+        const href=await chooser.locator('[data-sales-brief]').getAttribute('href');
+        const expectedPrefix=locale==='en'?'/en/kontakt/?':'/kontakt/?';
+        if(!href?.startsWith(expectedPrefix))issues.push({route,width,kind:'chooser wrong locale link',detail:href||''});
+        if(locale==='en' && /[čćžšđČĆŽŠĐ]/.test(recommendation))issues.push({route,width,kind:'chooser untranslated recommendation',detail:recommendation});
+        if(!recommendation.includes(locale==='en'?'Initial assessment':'Početna dijagnostika'))issues.push({route,width,kind:'chooser wrong recommendation',detail:recommendation});
+      } else issues.push({route,width,kind:'chooser missing'});
       await page.goto(url(locale==='en'?'/en/kontakt/':'/kontakt/'),{waitUntil:'domcontentloaded'});
       const form=page.locator('[data-contact-form]').first();
       if(await form.count()){
