@@ -133,7 +133,7 @@ function localize(html,srRoute) {
       transformed=transformed.replaceAll(from,to);
     }
   }
-  transformed=transformed.replace(/<html lang="sr-ME">/,'<html lang="en">');
+  transformed=transformed.replace(/<html lang="(?:sr-ME|sr)">/,'<html lang="en">');
   transformed=transformed.replace(/<meta property="og:locale" content="sr_ME">/,'<meta property="og:locale" content="en_US">');
   transformed=transformed.replace(/(<link rel="canonical" href=")[^"]+(")/,(_,a,b)=>a+'https://www.sindikatstudio83.me'+enRoute+b);
   transformed=transformed.replace(/(<meta property="og:url" content=")[^"]+(")/,(_,a,b)=>a+'https://www.sindikatstudio83.me'+enRoute+b);
@@ -168,6 +168,7 @@ function localize(html,srRoute) {
   const switcher='<a class="language-switch" href="'+srRoute+'" lang="sr-ME" hreflang="sr-ME" aria-label="Switch to Montenegrin">SR</a>';
   transformed=transformed.replace(/(<div class="nav-actions">)/,'$1'+switcher);
   transformed=transformed.replace(/(<nav aria-label="Mobilna navigacija">)/,'$1'+switcher);
+  if(srRoute==='/comment-picker/') transformed=transformed.replace('<div class="brand">','<div class="brand">'+switcher);
 
   return transformed;
 }
@@ -219,7 +220,12 @@ for(const {file,route} of pages) {
 }
 // Ensure the Serbian page has reciprocal SEO references and a language switch.
 for(const {file,route} of pages) {
-  if(route.startsWith('/comment-picker/')) continue;
+  if(route.startsWith('/comment-picker/')){
+    let utility=fs.readFileSync(file,'utf8');
+    utility=utility.replace('<div class="brand">','<div class="brand"><a class="language-switch" lang="en" hreflang="en" href="/en/comment-picker/">EN</a>');
+    fs.writeFileSync(file,utility);
+    continue;
+  }
   let sr=fs.readFileSync(file,'utf8');
   const enRoute=englishRoute(route);
   if(!sr.includes('hreflang="en"')){
@@ -233,6 +239,16 @@ for(const {file,route} of pages) {
 }
 
 // Publish both languages and reciprocal alternates in the XML sitemap.
+
+// A localized 404 document is retained for direct links and application fallback.
+const sr404=path.join(dist,'404.html');
+if(fs.existsSync(sr404)){
+  const localized404=localize(fs.readFileSync(sr404,'utf8'),'/404.html');
+  const out404=path.join(dist,'en','404.html');
+  fs.mkdirSync(path.dirname(out404),{recursive:true});
+  fs.writeFileSync(out404,localized404);
+}
+
 const sitemapPath=path.join(dist,'sitemap.xml');
 const originalSitemap=fs.readFileSync(sitemapPath,'utf8');
 const originalLocs=[...originalSitemap.matchAll(/<url><loc>([^<]+)<\/loc>([\s\S]*?)<\/url>/g)];
