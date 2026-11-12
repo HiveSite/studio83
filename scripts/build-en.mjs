@@ -137,6 +137,32 @@ function localize(html,srRoute) {
   transformed=transformed.replace(/<meta property="og:locale" content="sr_ME">/,'<meta property="og:locale" content="en_US">');
   transformed=transformed.replace(/(<link rel="canonical" href=")[^"]+(")/,(_,a,b)=>a+'https://www.sindikatstudio83.me'+enRoute+b);
   transformed=transformed.replace(/(<meta property="og:url" content=")[^"]+(")/,(_,a,b)=>a+'https://www.sindikatstudio83.me'+enRoute+b);
+
+  // Localize schema.org content, but preserve stable organization identifiers.
+  const schemaTranslate=(input,parentKey='')=>{
+    if(Array.isArray(input))return input.map(value=>schemaTranslate(value,parentKey));
+    if(input&&typeof input==='object'){
+      return Object.fromEntries(Object.entries(input).map(([key,val])=>[key,schemaTranslate(val,key)]));
+    }
+    if(typeof input!=='string')return input;
+    if(parentKey==='inLanguage')return 'en';
+    if(['name','description','headline'].includes(parentKey)){
+      const name=translations.get(input)??dynamicLabel(input);
+      return name||input;
+    }
+    if(['item','mainEntityOfPage','url'].includes(parentKey)&&input.startsWith('https://www.sindikatstudio83.me/')){
+      const pathPart=input.slice('https://www.sindikatstudio83.me'.length);
+      if(pathPart==='/'||(!pathPart.includes('#')&& !pathPart.startsWith('/images/')&&!pathPart.startsWith('/en/'))){
+        return 'https://www.sindikatstudio83.me'+englishRoute(pathPart);
+      }
+    }
+    return input;
+  };
+  transformed=transformed.replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/gi,(_all,a,body,c)=>{
+    try{return a+JSON.stringify(schemaTranslate(JSON.parse(body)))+c;}
+    catch(err){throw new Error('Invalid JSON-LD on '+srRoute+': '+err.message);}
+  });
+
   transformed=transformed.replace(/<head>/,'<head>\n  <link rel="alternate" hreflang="sr-ME" href="https://www.sindikatstudio83.me'+srRoute+'">\n  <link rel="alternate" hreflang="en" href="https://www.sindikatstudio83.me'+enRoute+'">\n  <link rel="alternate" hreflang="x-default" href="https://www.sindikatstudio83.me'+srRoute+'">');
   transformed=transformed.replace(/href="\/(?!\/|images\/|assets\/|favicon|en\/)([^"]*)"/g,(_,rest)=>'href="/en/'+rest+'"');
   const switcher='<a class="language-switch" href="'+srRoute+'" lang="sr-ME" hreflang="sr-ME" aria-label="Switch to Montenegrin">SR</a>';
@@ -205,6 +231,28 @@ for(const {file,route} of pages) {
   sr=sr.replace(/(<nav aria-label="Mobilna navigacija">)/,'$1'+localeSwitch);
   fs.writeFileSync(file,sr);
 }
+
+// Publish both languages and reciprocal alternates in the XML sitemap.
+const sitemapPath=path.join(dist,'sitemap.xml');
+const originalSitemap=fs.readFileSync(sitemapPath,'utf8');
+const originalLocs=[...originalSitemap.matchAll(/<url><loc>([^<]+)<\/loc>([\s\S]*?)<\/url>/g)];
+if(originalLocs.length!==54)throw new Error('Unexpected sitemap route count: '+originalLocs.length);
+const domain='https://www.sindikatstudio83.me';
+const today=new Date().toISOString().slice(0,10);
+const xmlEsc=s=>s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const sitemapUrls=originalLocs.flatMap(match=>{
+  const srUrl=match[1];
+  const srRoute=srUrl.slice(domain.length);
+  const enRoute=englishRoute(srRoute);
+  const enUrl=domain+enRoute;
+  const change=match[2].match(/<changefreq>([^<]+)<\/changefreq>/)?.[1]||'monthly';
+  const priority=match[2].match(/<priority>([^<]+)<\/priority>/)?.[1]||'0.7';
+  const alternates='<xhtml:link rel="alternate" hreflang="sr-ME" href="'+xmlEsc(srUrl)+'"/><xhtml:link rel="alternate" hreflang="en" href="'+xmlEsc(enUrl)+'"/><xhtml:link rel="alternate" hreflang="x-default" href="'+xmlEsc(srUrl)+'"/>';
+  const render=loc=>'<url><loc>'+xmlEsc(loc)+'</loc>'+alternates+'<lastmod>'+today+'</lastmod><changefreq>'+change+'</changefreq><priority>'+priority+'</priority></url>';
+  return [render(srUrl),render(enUrl)];
+});
+fs.writeFileSync(sitemapPath,'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'+sitemapUrls.join('\n')+'\n</urlset>\n');
+
 const report=[...missing].map(([source,routes])=>({source,routes:[...routes]}));
 const out=path.join(root,'reports','en-untranslated.json');
 fs.mkdirSync(path.dirname(out),{recursive:true});
