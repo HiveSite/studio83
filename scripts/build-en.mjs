@@ -66,8 +66,8 @@ function translateText(raw,route) {
   const trim=raw.trim();
   if(!trim||trim==='__SINDIKAT_EN_ARTICLE_SLOT__')return raw;
   const decoded=entityDecode(trim);
-  if(/^od\\s+[\\d.,]+\\s*€(?:\\s*\\/\\s*mj\\.)?$/i.test(decoded)) {
-    return raw.replace(trim,decoded.replace(/^od\\s+([\\d.,]+)\\s*€(?:\\s*\\/\\s*mj\\.)?$/i,(_all,value)=>'from €'+value+(decoded.includes('/ mj.')?' / month':'')));
+  if(/^od\s+[\d.,]+\s*€(?:\s*\/\s*mj\.)?$/i.test(decoded)) {
+    return raw.replace(trim,decoded.replace(/^od\s+([\d.,]+)\s*€(?:\s*\/\s*mj\.)?$/i,(_all,value)=>'from €'+value+(decoded.includes('/ mj.')?' / month':'')));
   }
   let translated=translations.get(decoded)??translations.get(trim);
   if(!translated){
@@ -87,7 +87,7 @@ function localize(html,srRoute) {
   let transformed=html;
   // Preserve backend form values: original option text is the submitted value
   // where the HTML option has no explicit value attribute.
-  transformed=transformed.replace(/<option>([^<]+)<\\/option>/gi,(_whole,label)=>
+  transformed=transformed.replace(/<option>([^<]+)<\/option>/gi,(_whole,label)=>
     '<option value="'+label.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+label+'</option>');
   // Text nodes only. Never alter embedded JSON, inline JS, CSS or SVG source.
   transformed=transformed.replace(/(<(?:script|style|svg)\b[^>]*>[\s\S]*?<\/(?:script|style|svg)>|<[^>]+>|[^<]+)/gi,(token)=>{
