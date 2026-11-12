@@ -333,3 +333,6 @@ details>div p{margin:0}
 /* Keep the rotated FAQ toggle inside the viewport, including long translations. */
 .faq-list summary{padding-right:14px;gap:16px}
 .faq-list summary span{flex:0 0 auto;transform-origin:center center}
+
+/* English sales hero: protect the visual focal point from the longer translated headline. */
+html[lang="en"] .sales-home .hero-core strong{font-size:clamp(19px,1.85vw,27px);letter-spacing:-.055em;line-height:1.06;max-width:100%;overflow-wrap:anywhere}
