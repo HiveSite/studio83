@@ -1,6 +1,8 @@
 (() => {
   'use strict';
   const config = window.SINDIKAT_CONFIG || {};
+  const isEn = document.documentElement.lang.toLowerCase().startsWith('en');
+  const t = (sr, en) => isEn ? en : sr;
   const dataLayer = window.dataLayer = window.dataLayer || [];
   const pushEvent = (event, params = {}) => dataLayer.push({ event, ...params });
 
@@ -64,7 +66,7 @@
       if (fd.get('website')) return;
       if (!form.checkValidity()) {
         form.reportValidity();
-        status.textContent = 'Popuni obavezna polja.';
+        status.textContent = t('Popuni obavezna polja.', 'Complete the required fields.');
         status.className = 'form-status is-error';
         pushEvent('form_error', { form_name: 'lead_form', reason: 'validation' });
         return;
@@ -84,8 +86,8 @@
       };
       const old = submit.textContent;
       submit.disabled = true;
-      submit.textContent = 'Šaljem...';
-      status.textContent = 'Slanje u toku...';
+      submit.textContent = t('Šaljem...', 'Sending...');
+      status.textContent = t('Slanje u toku...', 'Submitting...');
       status.className = 'form-status';
       try {
         const response = await fetch(config.contactEndpoint, {
@@ -97,12 +99,12 @@
         if (!response.ok || result.ok === false) throw new Error(result.error || `HTTP ${response.status}`);
         pushEvent('generate_lead', { form_name: 'lead_form', goal: payload.goal, budget: payload.budget, form_source: payload.source });
         form.reset();
-        status.textContent = 'Hvala. Upit je poslat i javićemo se uskoro.';
+        status.textContent = t('Hvala. Upit je poslat i javićemo se uskoro.', 'Thank you. Your enquiry has been sent and we will get back to you soon.');
         status.className = 'form-status is-success';
         setTimeout(() => { window.location.href = '/hvala/?source=contact'; }, 700);
       } catch (error) {
         console.error(error);
-        status.textContent = 'Slanje nije prošlo. Probaj ponovo ili piši direktno na sindikatevents@gmail.com.';
+        status.textContent = t('Slanje nije prošlo. Probaj ponovo ili piši direktno na sindikatevents@gmail.com.', 'Submission failed. Please try again or email sindikatevents@gmail.com directly.');
         status.className = 'form-status is-error';
         pushEvent('form_error', { form_name: 'lead_form', reason: 'network' });
       } finally {
@@ -118,10 +120,10 @@
   if (blogCards.length) {
     let active = 'all';
     const apply = () => {
-      const q = (search?.value || '').toLocaleLowerCase('sr');
+      const q = (search?.value || '').toLocaleLowerCase(isEn ? 'en' : 'sr');
       blogCards.forEach(card => {
         const matchCategory = active === 'all' || card.dataset.category === active;
-        const matchText = !q || card.textContent.toLocaleLowerCase('sr').includes(q);
+        const matchText = !q || card.textContent.toLocaleLowerCase(isEn ? 'en' : 'sr').includes(q);
         card.classList.toggle('hidden', !(matchCategory && matchText));
       });
     };
@@ -221,7 +223,7 @@
       applyForm.reset();
       submit.disabled = false;
       closeModal();
-      alert('Prijava je poslata.');
+      alert(t('Prijava je poslata.', 'Your application has been submitted.'));
     });
   });
 
@@ -249,7 +251,7 @@
       pushEvent('job_post_submit', { company: fd.get('company') || '' });
       postJobForm.reset();
       submit.disabled = false;
-      alert('Oglas je poslat na odobrenje.');
+      alert(t('Oglas je poslat na odobrenje.', 'The job listing has been submitted for approval.'));
     });
   });
 
@@ -260,11 +262,11 @@
       const clean = jobs.filter(job => job && (job.title || job.position)).slice(0, 12);
       jobsList.innerHTML = clean.map(job => {
         const id = String(job.id || job.ID || 'open');
-        const title = String(job.title || job.position || 'Angažman');
+        const title = String(job.title || job.position || t('Angažman', 'Assignment'));
         const company = String(job.company || 'Sindikat partner');
         const location = String(job.location || 'Crna Gora');
         const pay = job.pay ? `${job.pay} €` : 'Po dogovoru';
-        return `<article class="job-card"><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(company)}</p><div class="job-meta"><span>${escapeHtml(location)}</span><span>${escapeHtml(pay)}</span><span>${escapeHtml(job.type || 'Angažman')}</span></div></div><div class="job-card-actions"><button class="button button-primary button-small" type="button" data-apply-job data-job-id="${escapeHtml(id)}" data-job-title="${escapeHtml(title)}">Prijavi se</button></div></article>`;
+        return `<article class="job-card"><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(company)}</p><div class="job-meta"><span>${escapeHtml(location)}</span><span>${escapeHtml(pay)}</span><span>${escapeHtml(job.type || t('Angažman', 'Assignment'))}</span></div></div><div class="job-card-actions"><button class="button button-primary button-small" type="button" data-apply-job data-job-id="${escapeHtml(id)}" data-job-title="${escapeHtml(title)}">${isEn ? 'Apply' : 'Prijavi se'}</button></div></article>`;
       }).join('') || '<p>Trenutno nema objavljenih angažmana. Možeš poslati otvorenu prijavu.</p>';
     };
     const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));
