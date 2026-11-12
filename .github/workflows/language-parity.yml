@@ -33,13 +33,12 @@ jobs:
         run: |
           node --input-type=module -e '
           import fs from "node:fs";
-          const text=file=>fs.readFileSync(file,"utf8");
           for(const route of ["","usluge/"]){
             for(const lang of ["","en/"]){
-              const p="dist/"+lang+route+"index.html";
-              const html=text(p);
-              const h1=html.match(/<h1[^>]*>([\\s\\S]*?)<\\/h1>/)?.[1]||"";
-              console.log(lang+route+": "+h1.replace(/<[^>]+>/g," ").replace(/\\s+/g," ").slice(0,180));
+              const html=fs.readFileSync("dist/"+lang+route+"index.html","utf8");
+              const start=html.indexOf("<h1");
+              const end=html.indexOf("</h1>",start)+5;
+              console.log(lang+route+": "+html.slice(start,end).slice(0,260));
             }
           }
           '
