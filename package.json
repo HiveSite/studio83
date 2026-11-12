@@ -11,7 +11,9 @@
     "sync:blog": "node scripts/sync-blog.mjs",
     "audit": "python3 tests/dom_audit.py",
     "audit:i18n": "node scripts/audit-language-parity.mjs",
-    "i18n:inventory": "node scripts/extract-sr-content.mjs"
+    "i18n:inventory": "node scripts/extract-sr-content.mjs",
+    "i18n:build": "node scripts/build-en.mjs",
+    "i18n:check": "npm run build && npm run i18n:build && npm run audit:i18n"
   },
   "engines": {
     "node": ">=20"
