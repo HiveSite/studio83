@@ -324,3 +324,8 @@ details>div p{margin:0}
 .site-toast.is-error{border-color:rgba(255,107,107,.7)}
 @media(max-width:600px){.site-toast{inset:auto 16px 78px 16px;max-width:none;padding:14px 16px;font-size:13px}}
 @media(prefers-reduced-motion:reduce){.site-toast{transition:none}}
+
+/* Responsive hero typography: keep the central message inside its circular frame. */
+.hero-core{padding:clamp(12px,2.1vw,28px)}
+.hero-core strong{min-width:0;max-width:100%;font-size:clamp(20px,3vw,43px);line-height:.94;overflow-wrap:normal}
+@media(max-width:760px){.hero-node-1{right:1%}}
