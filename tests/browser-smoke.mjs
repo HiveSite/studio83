@@ -48,6 +48,7 @@ for(const width of deviceWidths){
   const context=await browser.newContext({viewport:{width,height:844},reducedMotion:'reduce',serviceWorkers:'block'});
   await context.route(/^https?:\/\/(?!127\.0\.0\.1)/,route=>route.abort());
   const page=await context.newPage();
+  const srRendered=new Map();
   page.setDefaultTimeout(7000);
   let pageError=[];
   page.on('pageerror',err=>pageError.push(err.message));
@@ -73,6 +74,19 @@ for(const width of deviceWidths){
           h1:document.querySelectorAll('h1').length,
           missingAsset:[...document.querySelectorAll('link[rel="stylesheet"],script[src]')].filter(el=>el.src?.includes('127.0.0.1')&&el.sheet===null&&el.tagName==='LINK').map(el=>el.href),
           switches:anchors.map(a=>a.getAttribute('href')),
+          rendered: {
+            sections:document.querySelectorAll('main > section').length,
+            h2:document.querySelectorAll('main h2').length,
+            h3:document.querySelectorAll('main h3').length,
+            form:document.querySelectorAll('main form').length,
+            salesAreas:document.querySelectorAll('.sales-area-card').length,
+            salesModels:document.querySelectorAll('.sales-model-card').length,
+            salesChooser:document.querySelectorAll('[data-sales-chooser]').length,
+            salesHome:document.body.classList.contains('sales-home'),
+            salesServices:document.body.classList.contains('sales-service-index'),
+            salesContact:document.body.classList.contains('sales-contact'),
+            mainText:document.querySelector('main')?.innerText.slice(0,1000)||''
+          },
           tinyButtons:tiny
         };
       });
@@ -84,6 +98,18 @@ for(const width of deviceWidths){
       if(pageError.length)issues.push({route,width,kind:'javascript exception',detail:pageError.slice(0,3).join(' | ')});
       if(state.missingAsset.length)issues.push({route,width,kind:'stylesheet missing',detail:state.missingAsset.join(',')});
       if(state.tinyButtons.length)issues.push({route,width,kind:'tiny buttons',detail:state.tinyButtons.join(',')});
+      if(locale==='sr') srRendered.set(sr,state.rendered);
+      if(locale==='en' && ['/','/usluge/','/kontakt/'].includes(sr)){
+        const original=srRendered.get(sr);
+        for(const field of ['sections','h2','h3','form','salesAreas','salesModels','salesChooser','salesHome','salesServices','salesContact']){
+          if(original?.[field]!==state.rendered[field])issues.push({route,width,kind:'rendered SR/EN mismatch',detail:field+': '+original?.[field]+' vs '+state.rendered[field]});
+        }
+        if(/[čćžšđČĆŽŠĐ]/.test(state.rendered.mainText))issues.push({route,width,kind:'untranslated EN dynamic copy',detail:state.rendered.mainText.slice(0,250)});
+        if(sr==='/' && (!state.rendered.salesHome || !state.rendered.mainText.includes('Digital, campaigns,'))) issues.push({route,width,kind:'English sales home not localized'});
+        if(sr==='/usluge/' && (!state.rendered.salesServices || !state.rendered.mainText.includes('What would you like to achieve?')))issues.push({route,width,kind:'English sales services not localized'});
+        if(sr==='/kontakt/' && (!state.rendered.salesContact || !state.rendered.mainText.includes('Tell us your goal.')))issues.push({route,width,kind:'English sales contact not localized'});
+      }
+
       if(representative.has(sr)&&width!==768){
         const slug=sr==='/'?'home':sr.replace(/^\/|\/$/g,'').replaceAll('/','-');
         await page.screenshot({path:path.join(screenDir,slug+'-'+locale+'-'+width+'.png'),fullPage:false,animations:'disabled'});
