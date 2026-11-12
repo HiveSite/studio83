@@ -205,54 +205,98 @@
     body: new URLSearchParams({ ...payload, source: 'Sindikat website - production', userAgent: navigator.userAgent }).toString()
   });
 
-  applyForm?.addEventListener('submit', event => {
+  const flashFeedback = (message, error = false) => {
+    let toast = document.querySelector('[data-site-toast]');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.dataset.siteToast = '';
+      toast.className = 'site-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      document.body.appendChild(toast);
+    }
+    toast.classList.toggle('is-error', error);
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    clearTimeout(flashFeedback.timer);
+    flashFeedback.timer = setTimeout(() => toast.classList.remove('is-visible'), 6500);
+  };
+
+  applyForm?.addEventListener('submit', async event => {
     event.preventDefault();
+    if (!applyForm.reportValidity()) return;
     const fd = new FormData(applyForm);
     const submit = applyForm.querySelector('button[type="submit"]');
+    if (submit.disabled) return;
     submit.disabled = true;
-    postUrlEncoded({
-      action: 'apply',
-      jobId: fd.get('jobId') || '',
-      jobTitle: fd.get('jobTitle') || '',
-      name: fd.get('name') || '',
-      email: fd.get('email') || '',
-      phone: fd.get('phone') || '',
-      msg: fd.get('msg') || ''
-    }).finally(() => {
-      pushEvent('job_application', { job_id: fd.get('jobId') || '', job_title: fd.get('jobTitle') || '' });
+    try {
+      await postUrlEncoded({
+        action: 'apply',
+        jobId: fd.get('jobId') || '',
+        jobTitle: fd.get('jobTitle') || '',
+        name: fd.get('name') || '',
+        email: fd.get('email') || '',
+        phone: fd.get('phone') || '',
+        msg: fd.get('msg') || ''
+      });
+      // Apps Script is contacted using no-cors, so delivery cannot be confirmed by the browser.
+      pushEvent('job_application_request', { job_id: fd.get('jobId') || '' });
       applyForm.reset();
-      submit.disabled = false;
       closeModal();
-      alert(t('Prijava je poslata.', 'Your application has been submitted.'));
-    });
+      flashFeedback(t(
+        'Zahtjev je proslijeđen. Potvrdu prijema nije moguće provjeriti automatski.',
+        'Request sent. Automatic delivery confirmation is unavailable.'
+      ));
+    } catch (error) {
+      console.error(error);
+      flashFeedback(t(
+        'Slanje nije uspjelo. Pokušaj ponovo ili nas kontaktiraj emailom.',
+        'Could not submit your request. Try again or contact us by email.'
+      ), true);
+    } finally {
+      submit.disabled = false;
+    }
   });
 
   const postJobForm = document.querySelector('[data-post-job-form]');
-  postJobForm?.addEventListener('submit', event => {
+  postJobForm?.addEventListener('submit', async event => {
     event.preventDefault();
+    if (!postJobForm.reportValidity()) return;
     const fd = new FormData(postJobForm);
     const submit = postJobForm.querySelector('button[type="submit"]');
+    if (submit.disabled) return;
     const now = new Date();
     submit.disabled = true;
-    postUrlEncoded({
-      action: 'post_job',
-      id: `p_${Date.now()}`,
-      title: fd.get('title') || '',
-      company: fd.get('company') || '',
-      location: fd.get('location') || '',
-      category: fd.get('category') || '',
-      type: fd.get('type') || '',
-      pay: fd.get('pay') || '',
-      payType: fd.get('payType') || 'daily',
-      posted: now.toISOString().slice(0, 10),
-      desc: fd.get('desc') || '',
-      responsibilities: '', qualifications: '', benefits: '', img: '', apply: fd.get('apply') || ''
-    }).finally(() => {
-      pushEvent('job_post_submit', { company: fd.get('company') || '' });
+    try {
+      await postUrlEncoded({
+        action: 'post_job',
+        id: `p_${Date.now()}`,
+        title: fd.get('title') || '',
+        company: fd.get('company') || '',
+        location: fd.get('location') || '',
+        category: fd.get('category') || '',
+        type: fd.get('type') || '',
+        pay: fd.get('pay') || '',
+        payType: fd.get('payType') || 'daily',
+        posted: now.toISOString().slice(0, 10),
+        desc: fd.get('desc') || '',
+        responsibilities: '', qualifications: '', benefits: '', img: '', apply: fd.get('apply') || ''
+      });
+      pushEvent('job_post_request', { company: fd.get('company') || '' });
       postJobForm.reset();
+      flashFeedback(t(
+        'Zahtjev je proslijeđen na obradu. Objava oglasa nije automatski potvrđena.',
+        'Request submitted for processing. Publication has not been confirmed.'
+      ));
+    } catch (error) {
+      console.error(error);
+      flashFeedback(t(
+        'Slanje nije uspjelo. Provjeri vezu i pokušaj ponovo.',
+        'Could not submit your request. Check your connection and try again.'
+      ), true);
+    } finally {
       submit.disabled = false;
-      alert(t('Oglas je poslat na odobrenje.', 'The job listing has been submitted for approval.'));
-    });
+    }
   });
 
   const jobsList = document.querySelector('[data-jobs-list]');
@@ -264,10 +308,10 @@
         const id = String(job.id || job.ID || 'open');
         const title = String(job.title || job.position || t('Angažman', 'Assignment'));
         const company = String(job.company || 'Sindikat partner');
-        const location = String(job.location || 'Crna Gora');
-        const pay = job.pay ? `${job.pay} €` : 'Po dogovoru';
+        const location = String(job.location || t('Crna Gora', 'Montenegro'));
+        const pay = job.pay ? `${job.pay} €` : t('Po dogovoru', 'To be agreed');
         return `<article class="job-card"><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(company)}</p><div class="job-meta"><span>${escapeHtml(location)}</span><span>${escapeHtml(pay)}</span><span>${escapeHtml(job.type || t('Angažman', 'Assignment'))}</span></div></div><div class="job-card-actions"><button class="button button-primary button-small" type="button" data-apply-job data-job-id="${escapeHtml(id)}" data-job-title="${escapeHtml(title)}">${isEn ? 'Apply' : 'Prijavi se'}</button></div></article>`;
-      }).join('') || '<p>Trenutno nema objavljenih angažmana. Možeš poslati otvorenu prijavu.</p>';
+      }).join('') || (isEn ? '<p>There are currently no published assignments. You can submit a general application.</p>' : '<p>Trenutno nema objavljenih angažmana. Možeš poslati otvorenu prijavu.</p>');
     };
     const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));
     renderJobs(fallback);

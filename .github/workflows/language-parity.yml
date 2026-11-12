@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   bilingual:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout (read-only)
@@ -29,6 +29,19 @@ jobs:
           /tmp/sindikat-audit/bin/python -m pip install --disable-pip-version-check beautifulsoup4==4.14.2
       - name: Build every SR/EN page and validate parity
         run: npm run build
+      - name: Verify generated SR and EN entry content
+        run: |
+          node --input-type=module -e '
+          import fs from "node:fs";
+          for(const route of ["","usluge/"]){
+            for(const lang of ["","en/"]){
+              const html=fs.readFileSync("dist/"+lang+route+"index.html","utf8");
+              const start=html.indexOf("<h1");
+              const end=html.indexOf("</h1>",start)+5;
+              console.log(lang+route+": "+html.slice(start,end).slice(0,260));
+            }
+          }
+          '
       - name: Validate all generated routes and internal links
         run: npm run test
       - name: Audit bilingual DOM and structured data
@@ -36,3 +49,19 @@ jobs:
           PATH="/tmp/sindikat-audit/bin:$PATH" npm run audit
       - name: Export content inventory
         run: npm run i18n:inventory
+      - name: Install Chromium for page-by-page visual smoke tests
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Check all SR/EN pages in three viewport widths
+        run: node tests/browser-smoke.mjs
+      - name: Save representative screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio83-browser-qa
+          path: |
+            reports/browser-qa.json
+            reports/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
