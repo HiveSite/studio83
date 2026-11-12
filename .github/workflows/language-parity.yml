@@ -1,0 +1,35 @@
+name: Verify SR-EN parity
+on:
+  push:
+    branches:
+      - fix/sr-en-parity-2026-11-12
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  bilingual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout (read-only)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Verify source build and existing tests
+        run: |
+          npm run build
+          npm run test
+          npm run audit
+      - name: Generate English pages and collect untranslated text
+        run: npm run i18n:build
+      - name: Validate parity
+        if: always()
+        run: npm run audit:i18n
