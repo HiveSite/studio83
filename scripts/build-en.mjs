@@ -14,7 +14,28 @@ import {moreEn} from '../src/i18n/en-more.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist=path.join(root,'dist');
 const translations=new Map([...Object.entries(uiEn),...Object.entries(pagesEn),...Object.entries(moreEn)]);
+const blogPosts=JSON.parse(fs.readFileSync(path.join(root,'src/data/blog-posts.json'),'utf8'));
+const blogEnglish=new Map();
+for(const post of blogPosts){
+  const file=path.join(root,'src/i18n/blog-en',post.slug+'.json');
+  if(!fs.existsSync(file)){
+    missingPlaceholder(post.slug);
+    continue;
+  }
+  const en=JSON.parse(fs.readFileSync(file,'utf8'));
+  for(const field of ['title','excerpt','description','coverAlt']){
+    if(!en[field] || typeof en[field]!=='string')throw new Error('Missing '+field+' in '+file);
+    if(post[field]!==en[field])translations.set(post[field],en[field]);
+  }
+  if(!Array.isArray(en.tags)||en.tags.length!==post.tags.length)throw new Error('Tag mismatch: '+post.slug);
+  post.tags.forEach((value,i)=>{if(value!==en.tags[i])translations.set(value,en.tags[i])});
+  if(!Array.isArray(en.segments))throw new Error('Body translations missing: '+post.slug);
+  blogEnglish.set(post.slug,en);
+}
+function missingPlaceholder(slug) { console.warn('English article missing: '+slug); }
+
 const missing=new Map();
+
 const skipKeys=new Set(['slug','accent','id','category','cover','url','href']);
 function align(sr,en,key='') {
   if (Array.isArray(sr)&&Array.isArray(en)) {
@@ -43,7 +64,7 @@ const entityDecode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#
 const escapeText=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function translateText(raw,route) {
   const trim=raw.trim();
-  if(!trim)return raw;
+  if(!trim||trim==='__SINDIKAT_EN_ARTICLE_SLOT__')return raw;
   const decoded=entityDecode(trim);
   let translated=translations.get(decoded)??translations.get(trim);
   if(!translated){
@@ -77,6 +98,9 @@ function localize(html,srRoute) {
   const switcher='<a class="language-switch" href="'+srRoute+'" lang="sr-ME" hreflang="sr-ME" aria-label="Switch to Montenegrin">SR</a>';
   transformed=transformed.replace(/(<div class="nav-actions">)/,'$1'+switcher);
   return transformed;
+}
+for(const post of blogPosts) {
+ if(!blogEnglish.has(post.slug)) missing.set('Untranslated full blog article: '+post.slug,new Set(['/blog/'+post.slug+'/']));
 }
 const pages=[];
 function walk(dir){
