@@ -10,6 +10,10 @@ for file in root.rglob('*.html'):
     text=file.read_text(encoding='utf-8')
     soup=BeautifulSoup(text,'html.parser')
     redirect=soup.find('meta',attrs={'http-equiv':re.compile('refresh',re.I)}) is not None
+    # Non-indexable standalone comment picker is not a marketing/SEO landing page.
+    # Its accessible title, H1 and links are covered by tests/validate.mjs.
+    if str(rel) in {'comment-picker/index.html','en/comment-picker/index.html'}:
+        continue
     if redirect:
         continue
     h1=soup.find_all('h1')

@@ -19,13 +19,14 @@ for(const file of htmlFiles){
   const html=fs.readFileSync(file,'utf8');
   const rel=path.relative(root,file).replaceAll('\\','/');
   const isRedirect = /http-equiv="refresh"/i.test(html) && /noindex,follow/i.test(html);
+  const isPrivateUtility = /^(?:en\/)?comment-picker\/index\.html$/.test(rel) && /<meta name="robots" content="noindex,nofollow">/i.test(html);
   if(!/<title>[^<]{10,}<\/title>/i.test(html))errors.push(`${rel}: missing/short title`);
   if(!isRedirect){
-    if(!/<meta name="description" content="[^"]{50,}"/i.test(html)&&rel!=='404.html')errors.push(`${rel}: missing/short description`);
+    if(!isPrivateUtility && !/<meta name="description" content="[^"]{50,}"/i.test(html)&&rel!=='404.html' && rel!=='en/404.html')errors.push(`${rel}: missing/short description`);
     if(!/<h1[ >]/i.test(html))errors.push(`${rel}: missing h1`);
-    if(!/G-NH2FL5SP1Y/.test(html)||!/GTM-PBXVW3GK/.test(html))errors.push(`${rel}: analytics IDs not preserved`);
+    if(!isPrivateUtility && (!/G-NH2FL5SP1Y/.test(html)||!/GTM-PBXVW3GK/.test(html)))errors.push(`${rel}: analytics IDs not preserved`);
   }
-  if(!/<link rel="canonical" href="https:\/\/www\.sindikatstudio83\.me\//i.test(html))errors.push(`${rel}: missing canonical`);
+  if(!isPrivateUtility && !/<link rel="canonical" href="https:\/\/www\.sindikatstudio83\.me\//i.test(html))errors.push(`${rel}: missing canonical`);
   if(/https:\/\/images\.unsplash\.com|pinterest|squarespace-cdn|posaouturizmu/i.test(html))errors.push(`${rel}: external hotlinked image`);
   if(/<style[ >]/i.test(html))warnings.push(`${rel}: inline style block`);
   const hrefs=[...html.matchAll(/href="(\/[^"]*)"/g)].map(m=>m[1].split('#')[0].split('?')[0]);

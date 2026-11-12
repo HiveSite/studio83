@@ -4,12 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
+    "build": "node build.mjs && node scripts/build-en.mjs && node scripts/audit-language-parity.mjs",
     "test": "node tests/validate.mjs",
     "check": "npm run build && npm run test && npm run audit",
     "dev": "python3 -m http.server 4173 -d dist",
     "sync:blog": "node scripts/sync-blog.mjs",
-    "audit": "python3 tests/dom_audit.py"
+    "audit": "python3 tests/dom_audit.py",
+    "audit:i18n": "node scripts/audit-language-parity.mjs",
+    "i18n:inventory": "node scripts/extract-sr-content.mjs",
+    "i18n:build": "node scripts/build-en.mjs",
+    "i18n:check": "npm run build && npm run test"
   },
   "engines": {
     "node": ">=20"

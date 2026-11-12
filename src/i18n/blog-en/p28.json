@@ -1,0 +1,41 @@
+{
+  "title": "Common SEO mistakes on agency websites in Montenegro and how to fix them",
+  "excerpt": "Many local websites look polished but lose search visibility because of basic mistakes: duplicate pages, weak structure and mismatched intent. Here is a list of fixes.",
+  "description": "Many local websites look polished but lose search visibility because of basic mistakes: duplicate pages, weak structure and mismatched intent. Here is a list of fixes.",
+  "coverAlt": "Technical SEO audit: code, errors and performance",
+  "tags": [
+    "SEO mistakes",
+    "agencies",
+    "Montenegro",
+    "structure"
+  ],
+  "segments": [
+    "Why most agency websites do not rank",
+    "Design is rarely the whole problem. Many websites look modern but struggle to rank because their offer, structure and evidence are unclear to Google. A website should generate enquiries, not simply showcase a portfolio. If visitors say 'looks nice' but cannot tell what they will receive or how to enquire, the site is not doing its job.",
+    "Agency websites often make the same mistake: talking about themselves instead of answering search intent. Google tries to rank pages that address users' questions. People search for service + city, price + service, best + service or contact + service. If those pages are missing or vague, visibility suffers.",
+    "Mistake 1: missing service landing pages",
+    "With only a homepage and an About page, ranking for service + city searches is difficult. Google has no dedicated page matching that intent, and visitors lack a clear enquiry route. The solution is focused service pages, one per service, plus event and activation pages where relevant.",
+    "Each service page needs a clear H1, a one-sentence offer, one CTA, proof above the fold, a three-step process, FAQ explaining price and timing, and an easy contact method. This structure serves conversion as well as SEO.",
+    "Mistake 2: duplicate URLs and inconsistent canonical signals",
+    "Different URL versions confuse indexing: www versus non-www, HTTP versus HTTPS, trailing slash variants, legacy .html pages, parameters and duplicate categories. Search engines can discover several copies of the same content and may struggle to identify the preferred version, diluting signals.",
+    "Fix this with one canonical URL convention, consistent redirects, a clean sitemap and removal of avoidable duplicate URLs. These are fundamentals, not minor details.",
+    "Mistake 3: keywords that are too broad",
+    "'Marketing agency' is broad and competitive. Locally, specificity may work better. People often search for a particular problem in a particular city rather than a generic agency category. Targeting precise commercial queries can be more effective.",
+    "Examples include Meta Ads Podgorica, Google Ads Montenegro, event organization Podgorica, event production Montenegro, promotional hostesses Podgorica and sound and lighting Podgorica. Not every query needs to mention Podgorica, but each page should have a clear intent.",
+    "Mistake 4: missing proof and E-E-A-T signals",
+    "Without a process, on-site scenes or concrete examples, pages can sound empty. Google and especially people benefit from evidence. Trust in services does not come from simply saying 'we are professional'; it comes from specifics.",
+    "Use case studies, process descriptions, FAQ, references, authentic on-site photos and explanations of how collaboration works and what clients receive. You can anonymize clients when needed, but examples must remain real. One good mini case can outweigh ten generic claims.",
+    "Mistake 5: poor mobile UX",
+    "Many visitors use mobile. Hidden CTAs, long forms, slow pages and dense text lead to abandonment. Whatever search engines infer, the business loses enquiries directly.",
+    "Put the CTA high on the page, shorten forms, optimize images, use readable paragraphs and make essential information accessible without excessive scrolling. On mobile, a three-second delay can feel significant.",
+    "The best-ranking website is not necessarily the prettiest. It is one that clearly answers users' needs.",
+    "FAQ",
+    "What is the fastest SEO fix?",
+    "Build focused service landing pages with a clear offer and FAQ. That creates structure and matches local intent.",
+    "Can a blog help without service pages?",
+    "Yes, but it may convert less effectively. Articles should guide readers towards relevant services. Without service pages, blog traffic lacks a clear route to enquiry.",
+    "references:",
+    "Google Search Central - SEO basics and page quality -",
+    "developers.google.com/search"
+  ]
+}
