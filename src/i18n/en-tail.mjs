@@ -1,4 +1,12 @@
 export const tailEn = {
+  'Instagram Comment Picker':'Instagram Comment Picker',
+  'Industrije - turizam, retail, eventi i zapošljavanje':'Industries - tourism, retail, events and recruitment',
+  'Radovi i case studies':'Work and case studies',
+  'Aktivacije i eventi u Crnoj Gori':'Activations and events in Montenegro',
+  'Performance marketing u Crnoj Gori':'Performance marketing in Montenegro',
+  'Recruitment kampanje u Crnoj Gori':'Recruitment campaigns in Montenegro',
+  'Sadržaj za kampanje u Crnoj Gori':'Campaign content in Montenegro',
+  'Web i konverzije u Crnoj Gori':'Web and conversions in Montenegro',
   'Sindikat Studio 83 - kampanje, ljudi i teren':'Sindikat Studio 83 - campaigns, people and on-site execution',
   'Performance kampanje, aktivacije, sadržaj, web i recruitment u Crnoj Gori. Povezujemo digital, ljude i teren kroz jedan mjerljiv cilj.':'Performance campaigns, activations, content, web and recruitment in Montenegro. We connect digital, teams and field execution around a measurable goal.',
   'ljudi u operativnom rosteru':'people on the operational roster',
