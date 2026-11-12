@@ -317,3 +317,10 @@ details>div p{margin:0}
 .language-switch:hover,.language-switch:focus-visible{border-color:#02C9BF;color:#02C9BF;background:rgba(2,201,191,.09)}
 .language-switch:focus-visible{outline:2px solid #02C9BF;outline-offset:3px}
 .mobile-panel .language-switch{width:max-content;min-width:46px;margin-top:8px}
+
+/* Accessible confirmation feedback shared by both locale-specific job flows. */
+.site-toast{position:fixed;z-index:1200;inset:auto 24px 24px auto;max-width:min(440px,calc(100vw - 32px));padding:16px 20px;border:1px solid rgba(2,201,191,.45);border-radius:14px;background:#14151b;color:#fff;font-size:14px;font-weight:600;line-height:1.5;box-shadow:0 16px 42px rgba(0,0,0,.35);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s}
+.site-toast.is-visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.site-toast.is-error{border-color:rgba(255,107,107,.7)}
+@media(max-width:600px){.site-toast{inset:auto 16px 78px 16px;max-width:none;padding:14px 16px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.site-toast{transition:none}}
