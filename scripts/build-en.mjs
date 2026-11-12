@@ -10,10 +10,11 @@ import {casesEn} from '../src/data/cases.en.mjs';
 import {uiEn} from '../src/i18n/en-ui.mjs';
 import {pagesEn} from '../src/i18n/en-pages.mjs';
 import {moreEn} from '../src/i18n/en-more.mjs';
+import {tailEn} from '../src/i18n/en-tail.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist=path.join(root,'dist');
-const translations=new Map([...Object.entries(uiEn),...Object.entries(pagesEn),...Object.entries(moreEn)]);
+const translations=new Map([...Object.entries(uiEn),...Object.entries(pagesEn),...Object.entries(moreEn),...Object.entries(tailEn)]);
 const blogPosts=JSON.parse(fs.readFileSync(path.join(root,'src/data/blog-posts.json'),'utf8'));
 const blogEnglish=new Map();
 for(const post of blogPosts){
@@ -62,6 +63,17 @@ align(industries,industriesEn,'industries');
 align(cases,casesEn,'cases');
 const entityDecode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
 const escapeText=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function dynamicLabel(value){
+  for(let i=0;i<industries.length;i++){
+    const source=industries[i].title.toLowerCase();
+    const english=industriesEn[i].title.toLowerCase();
+    if(value==='Marketing za '+source+' u Crnoj Gori') return 'Marketing for '+english+' in Montenegro';
+    if(value==='Složi plan za '+source+'.') return 'Plan for '+english+'.';
+  }
+  return null;
+}
+const unchangedEnglish=/^(?:Performance|Studio|Breadcrumb|Podgorica|UGC|checklist|event marketing|remarketing|case study|Meta Ads|funnel|Google Ads|CTA|CPC|CPL|SEO|Local SEO|Google Maps|Google Business|Performance marketing|Web \\+ CRO|Creative system|Recruitment growth|Recruitment sprint|Creative plan|Website|Instagram Comment Picker|SINDIKAT STUDIO 83|Instagram tool|Random comment picker|Paste post\\. Load comments\\. Pick a winner\\.|Load comments|RANDOM DRAW|READY|Start draw|Admin \\/ preview|Test mode|Comments|©|↗|×)$/i;
+const specialBrand=/^(?:[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}|@sindikat_studio83|https?:\\/\\/\\S+|marko@email\\.com \\/ \\+382\\.\\.\\.)$/i;
 function translateText(raw,route) {
   const trim=raw.trim();
   if(!trim||trim==='__SINDIKAT_EN_ARTICLE_SLOT__')return raw;
@@ -69,9 +81,16 @@ function translateText(raw,route) {
   if(/^od\s+[\d.,]+\s*€(?:\s*\/\s*mj\.)?$/i.test(decoded)) {
     return raw.replace(trim,decoded.replace(/^od\s+([\d.,]+)\s*€(?:\s*\/\s*mj\.)?$/i,(_all,value)=>'from €'+value+(decoded.includes('/ mj.')?' / month':'')));
   }
-  let translated=translations.get(decoded)??translations.get(trim);
+  // Compound document titles retain the brand suffix, translate their page title.
+  const suffix=' | Sindikat Studio 83';
+  if(decoded.endsWith(suffix)){
+    const originalTitle=decoded.slice(0,-suffix.length);
+    const localizedTitle=translations.get(originalTitle)??dynamicLabel(originalTitle);
+    if(localizedTitle) return raw.replace(trim,escapeText(localizedTitle+suffix));
+  }
+  let translated=translations.get(decoded)??translations.get(trim)??dynamicLabel(decoded);
   if(!translated){
-    if(/^[\d\s€+%.,:!?#/\-]+$/.test(decoded) || /^\$\{/.test(decoded) ||
+    if(unchangedEnglish.test(decoded) || specialBrand.test(decoded) || /^[\d\s€+%.,:!?#/\-]+$/.test(decoded) || /^\$\{/.test(decoded) ||
       /^(Sindikat Studio 83|ImaPosla.me|Instagram|Email|Meta|Google|GA4|GTM|Web|FAQ)$/.test(decoded))return raw;
     missing.set(decoded,(missing.get(decoded)||new Set()).add(route));
     return raw;
