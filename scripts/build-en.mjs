@@ -8,10 +8,12 @@ import {industriesEn} from '../src/data/industries.en.mjs';
 import {cases} from '../src/data/cases.mjs';
 import {casesEn} from '../src/data/cases.en.mjs';
 import {uiEn} from '../src/i18n/en-ui.mjs';
+import {pagesEn} from '../src/i18n/en-pages.mjs';
+import {moreEn} from '../src/i18n/en-more.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist=path.join(root,'dist');
-const translations=new Map(Object.entries(uiEn));
+const translations=new Map([...Object.entries(uiEn),...Object.entries(pagesEn),...Object.entries(moreEn)]);
 const missing=new Map();
 const skipKeys=new Set(['slug','accent','id','category','cover','url','href']);
 function align(sr,en,key='') {
