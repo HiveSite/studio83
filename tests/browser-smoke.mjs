@@ -69,13 +69,14 @@ for(const width of deviceWidths){
         return {
           lang:doc.lang,
           overflow:Math.max(doc.scrollWidth,document.body.scrollWidth)-innerWidth,
+          offenders:[...document.querySelectorAll('body *')].filter(el=>{const r=el.getBoundingClientRect(); const cs=getComputedStyle(el);return r.width>0&&cs.position!=='fixed'&&r.right>innerWidth+3}).slice(0,12).map(el=>({tag:el.tagName,cls:String(el.className).slice(0,90),id:el.id,right:Math.round(el.getBoundingClientRect().right),width:Math.round(el.getBoundingClientRect().width)})),
           h1:document.querySelectorAll('h1').length,
           missingAsset:[...document.querySelectorAll('link[rel="stylesheet"],script[src]')].filter(el=>el.src?.includes('127.0.0.1')&&el.sheet===null&&el.tagName==='LINK').map(el=>el.href),
           switches:anchors.map(a=>a.getAttribute('href')),
           tinyButtons:tiny
         };
       });
-      if(state.overflow>4)issues.push({route,width,kind:'horizontal overflow',detail:state.overflow+'px'});
+      if(state.overflow>4)issues.push({route,width,kind:'horizontal overflow',detail:state.overflow+'px '+JSON.stringify(state.offenders)});
       if(state.h1!==1)issues.push({route,width,kind:'heading count',detail:state.h1});
       if(state.lang!==(locale==='en'?'en':'sr-ME'))issues.push({route,width,kind:'html lang',detail:state.lang});
       const expected=locale==='en'?sr:(sr==='/'?'/en/':'/en'+sr);
