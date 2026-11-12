@@ -101,7 +101,7 @@
         form.reset();
         status.textContent = t('Hvala. Upit je poslat i javićemo se uskoro.', 'Thank you. Your enquiry has been sent and we will get back to you soon.');
         status.className = 'form-status is-success';
-        setTimeout(() => { window.location.href = '/hvala/?source=contact'; }, 700);
+        setTimeout(() => { window.location.href = (isEn ? '/en/hvala/' : '/hvala/') + '?source=contact'; }, 700);
       } catch (error) {
         console.error(error);
         status.textContent = t('Slanje nije prošlo. Probaj ponovo ili piši direktno na sindikatevents@gmail.com.', 'Submission failed. Please try again or email sindikatevents@gmail.com directly.');
@@ -137,7 +137,7 @@
     search?.addEventListener('input', apply);
   }
 
-  if (blogCards.length && config.blogEndpoint) {
+  if (!isEn && blogCards.length && config.blogEndpoint) {
     fetch(config.blogEndpoint, { cache: 'no-store' })
       .then(response => response.json())
       .then(data => {
@@ -187,7 +187,7 @@
     const open = event.target.closest('[data-apply-job]');
     if (open && modal && applyForm) {
       applyForm.elements.jobId.value = open.dataset.jobId || 'open-application';
-      applyForm.elements.jobTitle.value = open.dataset.jobTitle || 'Otvorena prijava';
+      applyForm.elements.jobTitle.value = open.dataset.jobTitle || t('Otvorena prijava','General application');
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
