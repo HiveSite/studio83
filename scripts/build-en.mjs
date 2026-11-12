@@ -154,11 +154,26 @@ for(const {file,route} of pages) {
   if(translatedBody!==null)localized=localized.replace('__SINDIKAT_EN_ARTICLE_SLOT__',translatedBody);
   fs.writeFileSync(output,localized);
 }
+// Ensure the Serbian page has reciprocal SEO references and a language switch.
+for(const {file,route} of pages) {
+  if(route.startsWith('/comment-picker/')) continue;
+  let sr=fs.readFileSync(file,'utf8');
+  const enRoute=englishRoute(route);
+  if(!sr.includes('hreflang="en"')){
+    const alternates='<link rel="alternate" hreflang="sr-ME" href="https://www.sindikatstudio83.me'+route+'">\n  <link rel="alternate" hreflang="en" href="https://www.sindikatstudio83.me'+enRoute+'">\n  <link rel="alternate" hreflang="x-default" href="https://www.sindikatstudio83.me'+route+'">';
+    sr=sr.replace('<head>','<head>\n  '+alternates);
+  }
+  const localeSwitch='<a class="language-switch" href="'+enRoute+'" lang="en" hreflang="en" aria-label="Switch to English">EN</a>';
+  sr=sr.replace(/(<div class="nav-actions">)/,'$1'+localeSwitch);
+  sr=sr.replace(/(<nav aria-label="Mobilna navigacija">)/,'$1'+localeSwitch);
+  fs.writeFileSync(file,sr);
+}
 const report=[...missing].map(([source,routes])=>({source,routes:[...routes]}));
 const out=path.join(root,'reports','en-untranslated.json');
 fs.mkdirSync(path.dirname(out),{recursive:true});
 fs.writeFileSync(out,JSON.stringify({pages:pages.length,missing:report.length,items:report},null,2)+'\n');
 console.log('Generated '+pages.length+' EN structural mirrors. Missing translations: '+report.length);
+if(report.length) report.forEach((item,index)=>console.log('UNTRANSLATED '+String(index+1).padStart(3,'0')+': '+JSON.stringify(item)));
 if(report.length){
  console.error('English build is NOT release-ready. See reports/en-untranslated.json');
  process.exitCode=1;
