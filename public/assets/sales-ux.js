@@ -1,5 +1,173 @@
 (() => {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/';
+  const isEn = document.documentElement.lang.toLowerCase().startsWith('en');
+  const originalPath = window.location.pathname;
+  const path = (isEn ? originalPath.replace(/^\/en(?=\/|$)/, '') : originalPath).replace(/\/+$/, '') || '/';
+  const enText = {
+  "Kampanje i rast": "Campaigns and growth",
+  "Za više prodaje, kvalitetnijih upita i vidljivosti koja vodi do konkretne radnje.": "For more sales, better-qualified enquiries and visibility that leads to action.",
+  "Meta i Google": "Meta and Google",
+  "kreativa": "creative",
+  "landing": "landing pages",
+  "tracking": "tracking",
+  "Web i digitalni proizvodi": "Web and digital products",
+  "Od landing stranice do kompleksnije platforme - jasno, brzo, mobilno i mjerljivo.": "From a landing page to a complex platform - clear, fast, mobile-first and measurable.",
+  "web sajtovi": "websites",
+  "platforme": "platforms",
+  "Aktivacije i eventi": "Activations and events",
+  "Od koncepta do kompletne realizacije - produkcija, logistika, tim i dokaz sa terena.": "From concept to delivery - production, logistics, people and evidence from the field.",
+  "koncept": "concept",
+  "produkcija": "production",
+  "logistika": "logistics",
+  "teren": "on-site",
+  "Timovi i angažmani": "Teams and assignments",
+  "Ljudi za promocije, događaje i operativne potrebe - sourcing, briefing i organizacija.": "People for promotions, events and operational needs - sourcing, briefing and coordination.",
+  "hostese": "hostesses",
+  "promoteri": "promoters",
+  "staffing": "staffing",
+  "recruitment": "recruitment",
+  "Pogledaj rješenje": "Explore solution",
+  "Šta vam treba?": "What do you need?",
+  "Izaberite cilj. Ne morate znati naziv usluge.": "Choose your objective. You do not need to know the name of the service.",
+  "Mi slažemo kanale, produkciju i ljude iza cilja. Vi samo treba da znate šta želite da promijenite.": "We bring together the channels, production and people behind your goal. You only need to know what you want to change.",
+  "Kako sarađujemo": "How we work together",
+  "Tri jasna načina da radimo zajedno.": "Three clear ways to work together.",
+  "Ne kupujete listu zadataka. Birate nivo odgovornosti koji treba da preuzmemo.": "You are not buying a task list. You choose the level of responsibility we take on.",
+  "Jedan konkretan problem": "One specific challenge",
+  "Sprint": "Sprint",
+  "Za projekat sa jasnim početkom, isporukom i rokom.": "For a project with a clear start, deliverables and deadline.",
+  "definisan cilj i scope": "defined goal and scope",
+  "jedna odgovorna osoba": "one accountable lead",
+  "jasan rok i predaja": "clear deadline and handover",
+  "bez otvorene liste zahtjeva": "no open-ended requests",
+  "od 500 €": "from €500",
+  "jednokratno": "one-time",
+  "Kontinuirani rast": "Ongoing growth",
+  "Partnerstvo": "Partnership",
+  "Za firme kojima treba stalni digitalni i marketinški partner.": "For companies needing an ongoing digital and marketing partner.",
+  "kampanje i optimizacija": "campaigns and optimization",
+  "kreativa i sadržaj": "creative and content",
+  "web podrška po prioritetu": "prioritized web support",
+  "redovan pregled rezultata": "regular performance reviews",
+  "od 600 € / mj.": "from €600 / month",
+  "kontinuirano": "ongoing",
+  "Jedna tačka odgovornosti": "One point of accountability",
+  "Full execution": "Full execution",
+  "Za projekte gdje digital, produkcija, ljudi i teren moraju da rade kao jedan sistem.": "For projects where digital, production, people and on-site execution must work as one system.",
+  "plan i project management": "planning and project management",
+  "digital i kreativna produkcija": "digital and creative production",
+  "timovi, logistika i teren": "teams, logistics and on-site execution",
+  "izvještaj i naredni potez": "reporting and the next step",
+  "od 1.500 €": "from €1,500",
+  "prema obimu": "depending on scope",
+  "Medijski budžet, zakup, transport, osoblje i eksterni produkcijski troškovi se odvajaju kada su potrebni.": "Media spend, venue hire, transport, staff and third-party production costs are listed separately where relevant.",
+  "Pronađi pravi model": "Find the right model",
+  "3 pitanja. Jedna preporuka.": "3 questions. One recommendation.",
+  "Izaberite ono što je najbliže vašoj situaciji. Na kraju dobijate preporučeni pravac i brief sa već popunjenim kontekstom.": "Choose what best matches your situation. At the end, you will receive a suggested approach and a brief pre-filled with your context.",
+  "01 - cilj": "01 - objective",
+  "Šta želite da postignete?": "What would you like to achieve?",
+  "Više prodaje ili upita": "More sales or enquiries",
+  "Novi sajt ili platformu": "A new website or platform",
+  "Promociju ili događaj": "A promotion or event",
+  "Pronaći i organizovati ljude": "Find and coordinate people",
+  "Kompleksan projekat": "A complex project",
+  "02 - ritam": "02 - cadence",
+  "Kako projekat izgleda?": "What does the project look like?",
+  "Jednokratan projekat": "A one-off project",
+  "Treba nam kontinuirana podrška": "We need ongoing support",
+  "Još nijesmo sigurni": "We are not sure yet",
+  "03 - okvir": "03 - budget",
+  "Koji je okvirni budžet?": "What is the approximate budget?",
+  "Do 500 €": "Up to €500",
+  "500 - 1.500 €": "€500 - €1,500",
+  "1.500 - 5.000 €": "€1,500 - €5,000",
+  "5.000 €+": "€5,000+",
+  "Preporuka": "Recommendation",
+  "Izaberite tri odgovora iznad.": "Choose three answers above.",
+  "Ne morate pogoditi savršeno - brief ćemo finalno složiti zajedno.": "You do not have to get everything exactly right - we will finalize the brief together.",
+  "Pošalji brief": "Send a brief",
+  "Pogledaj radove": "View our work",
+  "Preporuka za vas": "Our recommendation",
+  "Jedan jasno definisan problem, isporuka i rok.": "One clearly defined challenge, deliverable and deadline.",
+  "Preuzimamo koordinaciju digitala, produkcije, ljudi i realizacije kao jednog sistema.": "We coordinate digital, production, people and delivery as one system.",
+  "Partnerstvo za timove i angažmane": "Partnership for teams and assignments",
+  "Sourcing, organizacija, briefing i operativa prema potrebnom broju ljudi i lokacija.": "Sourcing, coordination, briefing and operations based on the team size and number of locations.",
+  "Kontinuirano vodimo prioritete, kampanje, sadržaj i optimizaciju oko istog poslovnog cilja.": "We continuously manage priorities, campaigns, content and optimization around one business objective.",
+  "Web & Digital Sprint": "Web & Digital Sprint",
+  "Struktura, UX/UI, razvoj, integracije i objava u jasno zaključanom projektu.": "Structure, UX/UI, development, integrations and launch within a defined project.",
+  "Početna dijagnostika": "Initial assessment",
+  "Sa ovim okvirom prvo treba precizirati problem i napraviti mali, kontrolisan prvi korak.": "At this budget level, we first clarify the challenge and define a small, controlled first step.",
+  "Studio za rast i realizaciju": "Growth and delivery studio",
+  "Digital, kampanje,": "Digital, campaigns,",
+  "ljudi i realizacija.": "people and delivery.",
+  "Jedan tim.": "One team.",
+  "Od prvog klika do posljednjeg detalja na terenu - preuzimamo djelove koji moraju da rade zajedno i vodimo ih kroz jednu odgovornu tačku.": "From the first click to the final on-site detail, we coordinate the elements that must work together through one accountable team.",
+  "Pronađi rješenje": "Find a solution",
+  "Podgorica i cijela Crna Gora": "Podgorica and all of Montenegro",
+  "Jedan vlasnik projekta, manje koordinacije za klijenta": "One project lead, less coordination for the client",
+  "jedna tačka": "one point of",
+  "odgovornosti": "accountability",
+  "Digital": "Digital",
+  "Kampanje, web i tracking": "Campaigns, web and tracking",
+  "Ljudi": "People",
+  "Timovi, raspored i logistika": "Teams, scheduling and logistics",
+  "Teren": "On-site",
+  "Aktivacije, eventi i sadržaj": "Activations, events and content",
+  "Operativa koja postoji i van prezentacije.": "Operational capability beyond the pitch deck.",
+  "Izabrani radovi": "Selected work",
+  "Pogledajte kako izgleda kada preuzmemo odgovornost.": "See what it looks like when we take responsibility.",
+  "Problem, naš obim i rezultat - bez dekorativnih case study priča.": "The challenge, our role and the outcome - without decorative case-study claims.",
+  "Imate problem koji treba preuzeti?": "Have a challenge that needs an owner?",
+  "Pošaljite cilj, rok i okvirni budžet. Dobićete preporuku pravca i realan sljedeći korak.": "Send your goal, deadline and approximate budget. We will recommend a practical approach and next step.",
+  "Izaberite prema cilju": "Choose by objective",
+  "Ne morate znati da li vam treba performance, CRO, content ili staffing. Izaberite rezultat - mi ćemo složiti pravi sistem iza njega.": "You do not need to know whether you need performance, CRO, content or staffing. Choose the outcome - we will build the right system around it.",
+  "Najlakši način da krenete": "The easiest way to get started",
+  "izaberite jedan od 4 cilja": "choose one of four objectives",
+  "pogledajte šta tipično uključuje": "see what it usually includes",
+  "odaberite model saradnje": "choose a way to work together",
+  "pošaljite kratak brief": "send a short brief",
+  "Kratki brief": "Short brief",
+  "Recite cilj. Mi ćemo složiti ostatak.": "Tell us your goal. We will organize the rest.",
+  "Ne treba vam gotova specifikacija. Dovoljni su cilj, rok, ono što već postoji i okvirni budžet.": "You do not need a finished specification. Your goal, deadline, existing materials and approximate budget are enough.",
+  "Izaberite najbliži cilj": "Choose the closest objective",
+  "Web i digitalni proizvod": "Web and digital product",
+  "Aktivacija ili događaj": "Activation or event",
+  "Kompleksan projekat / više oblasti": "Complex project / multiple services",
+  "Nijesam siguran": "Not sure yet",
+  "Još nije definisan": "Not yet defined",
+  "do 500 €": "up to €500",
+  "Preporučeni model:": "Recommended model:",
+  "Tip saradnje:": "Collaboration type:",
+  "Okvirni budžet:": "Approximate budget:",
+  "Kratko o projektu:": "Briefly describe your project:",
+  "Problemi koje rješavamo": "Problems we solve",
+  "Glavni proizvodi": "Core services",
+  "Industrije": "Industries",
+  "Prije nego pošalješ upit.": "Before you send an enquiry.",
+  "Dokaz prije obećanja.": "Evidence before promises."
+};
+  const localizeSalesUi = (root) => {
+    if (!isEn || !root) return;
+    root.querySelectorAll('option').forEach(option => {
+      if (!option.hasAttribute('value')) option.setAttribute('value', option.textContent.trim());
+    });
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node=>{
+      if (node.parentElement?.closest('script,style,noscript')) return;
+      const raw=node.nodeValue;
+      const value=raw.trim();
+      const m=value.match(/^(\d{2}) - (.+)$/);
+      const translated=enText[value] || (m && enText[m[2]] ? m[1]+' - '+enText[m[2]] : null);
+      if(translated) node.nodeValue=raw.replace(value,translated);
+    });
+    root.querySelectorAll('a[href^="/"]').forEach(link=>{
+      const href=link.getAttribute('href');
+      if(href && !href.startsWith('//') && !href.startsWith('/en/') && href!=='/en'){
+        link.setAttribute('href', '/en'+href);
+      }
+    });
+  };
 
   const areas = [
     {
@@ -146,7 +314,7 @@
   }
 
   function findMainSection(text) {
-    return [...document.querySelectorAll('main > section')].find(section => section.textContent.includes(text));
+    return [...document.querySelectorAll('main > section')].find(section => section.textContent.includes(text) || (isEn && enText[text] && section.textContent.includes(enText[text])));
   }
 
   function setupChooser(root = document) {
@@ -162,7 +330,8 @@
     const render = () => {
       if (!state.goal || !state.mode || !state.budget) {
         result.innerHTML = '<span>Preporuka</span><strong>Izaberite tri odgovora iznad.</strong><p>Ne morate pogoditi savršeno - brief ćemo finalno složiti zajedno.</p>';
-        brief.href = '/kontakt/';
+        brief.href = isEn ? '/en/kontakt/' : '/kontakt/';
+        localizeSalesUi(result);
         return;
       }
       let title = 'Sprint';
@@ -185,7 +354,8 @@
       }
       result.innerHTML = `<span>Preporuka za vas</span><strong>${title}</strong><p>${text}</p>`;
       const params = new URLSearchParams({ cilj: goalLabels[state.goal], model: modeLabels[state.mode], budzet: budgetLabels[state.budget], preporuka: title });
-      brief.href = `/kontakt/?${params.toString()}`;
+      brief.href = `${isEn ? '/en' : ''}/kontakt/?${params.toString()}`;
+      localizeSalesUi(result);
     };
 
     chooser.querySelectorAll('.sales-chooser-step').forEach(step => {
@@ -329,4 +499,5 @@
   if (path === '/') enhanceHome();
   if (path === '/usluge') enhanceServicesIndex();
   if (path === '/kontakt') enhanceContact();
+  localizeSalesUi(document.querySelector('main'));
 })();
