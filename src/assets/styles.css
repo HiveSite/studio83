@@ -311,3 +311,9 @@ details>div p{margin:0}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.case-orbit{animation:none}}
 .article-content figure{margin:32px 0}.article-content figure img,.article-content>img{width:100%;height:auto;border-radius:18px;border:1px solid var(--line);background:#111}.article-content figcaption{margin-top:9px;color:#85828c;font-size:12px;line-height:1.45}.article-content .ref{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:#85828c}
+
+/* Bilingual switch: a consistent compact control in desktop and mobile navigation. */
+.language-switch{display:inline-flex;align-items:center;justify-content:center;min-width:42px;min-height:34px;padding:6px 10px;border:1px solid rgba(255,255,255,.28);border-radius:999px;color:inherit;text-decoration:none;font-size:12px;font-weight:800;letter-spacing:.06em;line-height:1;transition:border-color .15s,color .15s,background .15s}
+.language-switch:hover,.language-switch:focus-visible{border-color:#02C9BF;color:#02C9BF;background:rgba(2,201,191,.09)}
+.language-switch:focus-visible{outline:2px solid #02C9BF;outline-offset:3px}
+.mobile-panel .language-switch{width:max-content;min-width:46px;margin-top:8px}
