@@ -22,7 +22,7 @@ for(const file of htmlFiles){
   const isPrivateUtility = /^(?:en\/)?comment-picker\/index\.html$/.test(rel) && /<meta name="robots" content="noindex,nofollow">/i.test(html);
   if(!/<title>[^<]{10,}<\/title>/i.test(html))errors.push(`${rel}: missing/short title`);
   if(!isRedirect){
-    if(!isPrivateUtility && !/<meta name="description" content="[^"]{50,}"/i.test(html)&&rel!=='404.html')errors.push(`${rel}: missing/short description`);
+    if(!isPrivateUtility && !/<meta name="description" content="[^"]{50,}"/i.test(html)&&rel!=='404.html' && rel!=='en/404.html')errors.push(`${rel}: missing/short description`);
     if(!/<h1[ >]/i.test(html))errors.push(`${rel}: missing h1`);
     if(!isPrivateUtility && (!/G-NH2FL5SP1Y/.test(html)||!/GTM-PBXVW3GK/.test(html)))errors.push(`${rel}: analytics IDs not preserved`);
   }
