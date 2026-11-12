@@ -126,10 +126,33 @@ function walk(dir){
 }
 walk(dist);
 for(const {file,route} of pages) {
-  const html=fs.readFileSync(file,'utf8');
+  let html=fs.readFileSync(file,'utf8');
+  const match=route.match(/^\/blog\/(p\d+)\/$/);
+  let translatedBody=null;
+  if(match&&blogEnglish.has(match[1])){
+    const startTag='<div class="article-content" id="article-content">';
+    const start=html.indexOf(startTag);
+    const begin=start+startTag.length;
+    const finish=html.indexOf('</div></div></section></article>',begin);
+    if(start<0||finish<0)throw new Error('Article body markup changed: '+route);
+    const original=html.slice(begin,finish);
+    const segments=blogEnglish.get(match[1]).segments;
+    let n=0;
+    translatedBody=original.replace(/>([^<>]+)</g,(whole,v)=>{
+      if(!v.trim()||!/[A-Za-zÀ-ž]/.test(v))return whole;
+      if(n>=segments.length)throw new Error('Not enough article translations for '+route);
+      const translated=segments[n++];
+      if(typeof translated!=='string'||!translated.trim())throw new Error('Empty article segment '+route+' #'+n);
+      return '>'+escapeText(translated)+'<';
+    });
+    if(n!==segments.length)throw new Error('Extra article translations for '+route+': '+n+' / '+segments.length);
+    html=html.slice(0,begin)+'__SINDIKAT_EN_ARTICLE_SLOT__'+html.slice(finish);
+  }
   const output=path.join(dist,englishRoute(route).replace(/^\//,''),'index.html');
   fs.mkdirSync(path.dirname(output),{recursive:true});
-  fs.writeFileSync(output,localize(html,route));
+  let localized=localize(html,route);
+  if(translatedBody!==null)localized=localized.replace('__SINDIKAT_EN_ARTICLE_SLOT__',translatedBody);
+  fs.writeFileSync(output,localized);
 }
 const report=[...missing].map(([source,routes])=>({source,routes:[...routes]}));
 const out=path.join(root,'reports','en-untranslated.json');
