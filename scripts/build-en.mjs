@@ -66,6 +66,9 @@ function translateText(raw,route) {
   const trim=raw.trim();
   if(!trim||trim==='__SINDIKAT_EN_ARTICLE_SLOT__')return raw;
   const decoded=entityDecode(trim);
+  if(/^od\\s+[\\d.,]+\\s*€(?:\\s*\\/\\s*mj\\.)?$/i.test(decoded)) {
+    return raw.replace(trim,decoded.replace(/^od\\s+([\\d.,]+)\\s*€(?:\\s*\\/\\s*mj\\.)?$/i,(_all,value)=>'from €'+value+(decoded.includes('/ mj.')?' / month':'')));
+  }
   let translated=translations.get(decoded)??translations.get(trim);
   if(!translated){
     if(/^[\d\s€+%.,:!?#/\-]+$/.test(decoded) || /^\$\{/.test(decoded) ||
@@ -82,6 +85,10 @@ function englishRoute(sr) {return sr==='/'?'/en/':'/en'+sr;}
 function localize(html,srRoute) {
   const enRoute=englishRoute(srRoute);
   let transformed=html;
+  // Preserve backend form values: original option text is the submitted value
+  // where the HTML option has no explicit value attribute.
+  transformed=transformed.replace(/<option>([^<]+)<\\/option>/gi,(_whole,label)=>
+    '<option value="'+label.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+label+'</option>');
   // Text nodes only. Never alter embedded JSON, inline JS, CSS or SVG source.
   transformed=transformed.replace(/(<(?:script|style|svg)\b[^>]*>[\s\S]*?<\/(?:script|style|svg)>|<[^>]+>|[^<]+)/gi,(token)=>{
     if(token.startsWith('<'))return token;
@@ -97,6 +104,8 @@ function localize(html,srRoute) {
   transformed=transformed.replace(/href="\/(?!\/|images\/|assets\/|favicon|en\/)([^"]*)"/g,(_,rest)=>'href="/en/'+rest+'"');
   const switcher='<a class="language-switch" href="'+srRoute+'" lang="sr-ME" hreflang="sr-ME" aria-label="Switch to Montenegrin">SR</a>';
   transformed=transformed.replace(/(<div class="nav-actions">)/,'$1'+switcher);
+  transformed=transformed.replace(/(<nav aria-label="Mobilna navigacija">)/,'$1'+switcher);
+
   return transformed;
 }
 for(const post of blogPosts) {
