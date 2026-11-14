@@ -302,15 +302,28 @@
   const jobsList = document.querySelector('[data-jobs-list]');
   if (jobsList && config.jobsEndpoint) {
     const fallback = JSON.parse(jobsList.dataset.fallback || '[]');
+    // Static fallback jobs and jobs submitted through the existing API have
+    // stable source values. Keep their IDs and submitted values unchanged while
+    // localizing known visitor-facing strings for the English listing.
+    const jobLabelsEn = {
+      'Promoter / promoterka': 'Promoter',
+      'Hostesa / event osoblje': 'Hostess / event staff',
+      'Povremeni angažman': 'Occasional assignment',
+      'Crna Gora': 'Montenegro',
+      'Po dogovoru': 'To be agreed',
+      'Angažman': 'Assignment',
+      'Otvorena prijava': 'General application'
+    };
+    const localizeJobLabel = value => isEn ? (jobLabelsEn[String(value)] || String(value)) : String(value);
     const renderJobs = jobs => {
       const clean = jobs.filter(job => job && (job.title || job.position)).slice(0, 12);
       jobsList.innerHTML = clean.map(job => {
         const id = String(job.id || job.ID || 'open');
-        const title = String(job.title || job.position || t('Angažman', 'Assignment'));
-        const company = String(job.company || 'Sindikat partner');
-        const location = String(job.location || t('Crna Gora', 'Montenegro'));
-        const pay = job.pay ? `${job.pay} €` : t('Po dogovoru', 'To be agreed');
-        return `<article class="job-card"><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(company)}</p><div class="job-meta"><span>${escapeHtml(location)}</span><span>${escapeHtml(pay)}</span><span>${escapeHtml(job.type || t('Angažman', 'Assignment'))}</span></div></div><div class="job-card-actions"><button class="button button-primary button-small" type="button" data-apply-job data-job-id="${escapeHtml(id)}" data-job-title="${escapeHtml(title)}">${isEn ? 'Apply' : 'Prijavi se'}</button></div></article>`;
+        const title = localizeJobLabel(job.title || job.position || 'Angažman');
+        const company = localizeJobLabel(job.company || 'Sindikat partner');
+        const location = localizeJobLabel(job.location || 'Crna Gora');
+        const pay = job.pay ? `${job.pay} €` : localizeJobLabel('Po dogovoru');
+        return `<article class="job-card"><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(company)}</p><div class="job-meta"><span>${escapeHtml(location)}</span><span>${escapeHtml(pay)}</span><span>${escapeHtml(localizeJobLabel(job.type || 'Angažman'))}</span></div></div><div class="job-card-actions"><button class="button button-primary button-small" type="button" data-apply-job data-job-id="${escapeHtml(id)}" data-job-title="${escapeHtml(title)}">${isEn ? 'Apply' : 'Prijavi se'}</button></div></article>`;
       }).join('') || (isEn ? '<p>There are currently no published assignments. You can submit a general application.</p>' : '<p>Trenutno nema objavljenih angažmana. Možeš poslati otvorenu prijavu.</p>');
     };
     const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));

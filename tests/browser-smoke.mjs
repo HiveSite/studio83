@@ -85,7 +85,31 @@ for(const width of deviceWidths){
             salesHome:document.body.classList.contains('sales-home'),
             salesServices:document.body.classList.contains('sales-service-index'),
             salesContact:document.body.classList.contains('sales-contact'),
-            mainText:document.querySelector('main')?.innerText.slice(0,1000)||''
+            mainText:document.querySelector('main')?.innerText.slice(0,1000)||'',
+            structure:[...document.querySelectorAll('main *')].map(el=>{
+              const tag=el.tagName.toLowerCase();
+              const attr=(el.getAttribute('class')||'').trim().replace(/\\s+/g,' ');
+              return tag+'#'+(el.id||'')+'.'+attr;
+            }),
+            texts:(()=>{
+              const m=document.querySelector('main');
+              const w=document.createTreeWalker(m,NodeFilter.SHOW_TEXT);
+              const out=[];
+              while(w.nextNode()){
+                const n=w.currentNode;
+                const v=n.nodeValue.replace(/\\s+/g,' ').trim();
+                if(!v||n.parentElement.closest('script,style,noscript'))continue;
+                out.push({tag:n.parentElement.tagName.toLowerCase(),value:v});
+              }
+              return out;
+            })(),
+            links:[...document.querySelectorAll('main a[href]')].map(el=>el.getAttribute('href')),
+            forms:[...document.querySelectorAll('main input,main select,main textarea,main button')].map(el=>({
+              tag:el.tagName.toLowerCase(),type:el.getAttribute('type')||'',
+              name:el.getAttribute('name')||'',required:el.required||false,
+              disabled:el.disabled||false,
+              values:el.tagName==='SELECT'?[...el.options].map(o=>o.value):null
+            }))
           },
           tinyButtons:tiny
         };
@@ -99,6 +123,55 @@ for(const width of deviceWidths){
       if(state.missingAsset.length)issues.push({route,width,kind:'stylesheet missing',detail:state.missingAsset.join(',')});
       if(state.tinyButtons.length)issues.push({route,width,kind:'tiny buttons',detail:state.tinyButtons.join(',')});
       if(locale==='sr') srRendered.set(sr,state.rendered);
+      if(locale==='en'){
+        const original=srRendered.get(sr);
+        const actual=state.rendered;
+        if(original){
+          for(const key of ['structure','forms']){
+            const source=original[key],english=actual[key];
+            if(source.length!==english.length){
+              issues.push({route,width,kind:'strict DOM '+key+' count mismatch',detail:'SR '+source.length+' vs EN '+english.length});
+            }else{
+              let differences=0;
+              for(let k=0;k<source.length;k++){
+                if(JSON.stringify(source[k])!==JSON.stringify(english[k])){
+                  if(differences++<5)issues.push({route,width,kind:'strict DOM '+key+' mismatch',detail:k+': SR '+JSON.stringify(source[k]).slice(0,140)+' EN '+JSON.stringify(english[k]).slice(0,140)});
+                }
+              }
+            }
+          }
+          if(original.texts.length!==actual.texts.length){
+            issues.push({route,width,kind:'strict text node count mismatch',detail:'SR '+original.texts.length+' vs EN '+actual.texts.length});
+          }else{
+            let same=0;
+            for(let k=0;k<original.texts.length;k++){
+              const a=original.texts[k],b=actual.texts[k];
+              if(a.tag!==b.tag) {
+                if(same++<3)issues.push({route,width,kind:'text node alignment',detail:k+' '+a.tag+' vs '+b.tag});
+                continue;
+              }
+              const v=a.value;
+              if(v===b.value && /[čćžšđČĆŽŠĐ]/.test(v) && v.length>6 && same++<5){
+                issues.push({route,width,kind:'Serbian text remains in English',detail:k+': '+v.slice(0,180)});
+              }
+              if(v===b.value && v.split(' ').length>=7 && !/(https?:|@|www\\.|Sindikat Studio|Meta Ads|Google Ads|Google Analytics|Instagram)/i.test(v) && same++<5){
+                issues.push({route,width,kind:'Long untranslated identical text',detail:k+': '+v.slice(0,180)});
+              }
+            }
+          }
+          if(original.links.length!==actual.links.length) issues.push({route,width,kind:'anchor count differs',detail:original.links.length+' vs '+actual.links.length});
+          else {
+            let invalid=0;
+            for(let k=0;k<original.links.length;k++){
+              const a=original.links[k],b=actual.links[k];
+              if(a?.startsWith('/') && !a.startsWith('//') && !a.startsWith('/en/')){
+                const expected='/en'+a;
+                if(b!==expected && invalid++<5)issues.push({route,width,kind:'incorrect EN link',detail:k+': '+a+' -> '+b+' expected '+expected});
+              }
+            }
+          }
+        }
+      }
       if(locale==='en' && ['/','/usluge/','/kontakt/'].includes(sr)){
         const original=srRendered.get(sr);
         for(const field of ['sections','h2','h3','form','salesAreas','salesModels','salesChooser','salesHome','salesServices','salesContact']){
